@@ -11,22 +11,26 @@ public final class ImmutableLinkedList implements ImmutableList {
 
 
     public ImmutableLinkedList(Object[] elements) {
-        had = new Node();
-        had.setValue(elements[0]);
-        Node previous = had;
-        int counter = 0;
-        for (Object object: elements) {
-            if (counter != 0) {
-                Node newNode = new Node();
-                previous.setNext(newNode);
-                newNode.setValue(object);
-                newNode.setPrevious(previous);
-                previous = newNode;
+        if (elements.length == 0) {
+            new ImmutableLinkedList();
+        } else {
+            had = new Node();
+            had.setValue(elements[0]);
+            Node previous = had;
+            int counter = 0;
+            for (Object object: elements) {
+                if (counter != 0) {
+                    Node newNode = new Node();
+                    previous.setNext(newNode);
+                    newNode.setValue(object);
+                    newNode.setPrevious(previous);
+                    previous = newNode;
+                }
+                counter++;
             }
-            counter++;
+            len = counter;
+            tail = previous;
         }
-        len = counter;
-        tail = previous;
     }
 
     public ImmutableLinkedList() {
@@ -166,6 +170,6 @@ public final class ImmutableLinkedList implements ImmutableList {
     }
 
     public ImmutableLinkedList removeLast() {
-        return remove(len);
+        return remove(len - 1);
     }
 }
