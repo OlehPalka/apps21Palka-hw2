@@ -1,103 +1,171 @@
 package ua.edu.ucu.collections.immutable;
 
-public final class ImmutableLinkedList implements ImmutableList {
-    public ImmutableLinkedList(Object[] elements) {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+public final class ImmutableLinkedList implements ImmutableList {
+    private Node had;
+    private Node tail;
+    private int len = 0;
+
+
+    public ImmutableLinkedList(Object[] elements) {
+        had = new Node();
+        had.setValue(elements[0]);
+        Node previous = had;
+        int counter = 0;
+        for (Object object: elements) {
+            if (counter != 0) {
+                Node newNode = new Node();
+                previous.setNext(newNode);
+                newNode.setValue(object);
+                newNode.setPrevious(previous);
+                previous = newNode;
+            }
+            counter++;
+        }
+        len = counter;
+        tail = previous;
     }
 
     public ImmutableLinkedList() {
-
+        had = new Node();
+        tail = had;
     }
 
     @Override
-    public ImmutableList add(Object e) {
-        return null;
+    public ImmutableLinkedList add(Object e) {
+        return add(len, e);
     }
 
     @Override
-    public ImmutableList add(int index, Object e) {
-        return null;
+    public ImmutableLinkedList add(int index, Object e) {
+        List<Object> array = convertShit();
+        if (array.size() == 0) {
+            array.add(e);
+        } else {
+            array.add(index, e);
+        }
+        return new ImmutableLinkedList(array.toArray());
     }
 
     @Override
-    public ImmutableList addAll(Object[] c) {
-        return null;
+    public ImmutableLinkedList addAll(Object[] c) {
+        List<Object> array = convertShit();
+        Collections.addAll(array, c);
+        return new ImmutableLinkedList(array.toArray());
     }
 
     @Override
-    public ImmutableList addAll(int index, Object[] c) {
-        return null;
+    public ImmutableLinkedList addAll(int index, Object[] c) {
+        List<Object> array = convertShit();
+        for (int i = 0; i < c.length; i++) {
+            array.add(index + i, c[i]);
+        }
+        return new ImmutableLinkedList(array.toArray());
     }
 
     @Override
     public Object get(int index) {
-        return null;
+        return toArray()[index];
     }
 
     @Override
-    public ImmutableList remove(int index) {
-        return null;
+    public ImmutableLinkedList remove(int index) {
+        List<Object> array = convertShit();
+        array.remove(index);
+
+        return new ImmutableLinkedList(array.toArray());
     }
 
     @Override
-    public ImmutableList set(int index, Object e) {
-        return null;
+    public ImmutableLinkedList set(int index, Object e) {
+        Object[] array = toArray();
+        array[index] = e;
+        return new ImmutableLinkedList(array);
     }
 
     @Override
     public int indexOf(Object e) {
-        return 0;
+        Node current = had;
+        for (int i = 0; i < len; i++) {
+            if (current == e) {
+                return i;
+            }
+            current = current.getNext();
+        }
+        return -1;
     }
 
     @Override
     public int size() {
-        return 0;
+        return len;
     }
 
     @Override
-    public ImmutableList clear() {
-        return null;
+    public ImmutableLinkedList clear() {
+        return new ImmutableLinkedList();
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return len != 0;
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        ArrayList<Object> array = new ArrayList<>();
+        if (len == 0) {
+            return array.toArray();
+        }
+        Node current = had;
+
+        while (current != null) {
+            array.add(current.getValue());
+            current = current.getNext();
+        }
+
+        return array.toArray();
     }
 
+    public List<Object> convertShit() {
+        List<Object> array = new ArrayList<>();
+        Object[] lst = toArray();
+        Collections.addAll(array, lst);
+        return array;
+    }
+
+
     public ImmutableLinkedList addFirst(Object e) {
-        return null;
+        return addAll(0, new Object[]{e});
     }
 
     public ImmutableLinkedList addLast(Object e) {
-        return null;
+        return add(e);
     }
 
     public Node getHead() {
-        return null;
+        return had;
     }
 
     public Node getTail() {
-        return null;
+        return tail;
     }
 
     public Object getFirst() {
-        return null;
+        return had.getValue();
     }
 
     public Object getLast() {
-        return null;
+        return tail.getValue();
     }
 
     public ImmutableLinkedList removeFirst() {
-        return null;
+        return remove(0);
     }
 
     public ImmutableLinkedList removeLast() {
-        return null;
+        return remove(len);
     }
 }
